@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Human Psychological Assessment</title>
+  <style>
+    :root {
+      --primary: #3730A3;
+      --primary-light: #4338CA;
+      --secondary: #0D9488;
+      --secondary-light: #14B8A6;
+      --background: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text: #1E293B;
+      --text-light: #64748B;
+      --border: #E2E8F0;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background-color: var(--card-bg);
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .tab {
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-weight: 500;
+      background-color: transparent;
+      border: none;
+      transition: background-color 0.2s;
+    }
+    
+    .tab.active {
+      background-color: #EEF2FF;
+      color: var(--primary);
+    }
+    
+    .main-content {
+      padding: 2rem 0;
+      text-align: center;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      font-size: 1.125rem;
+      color: var(--text-light);
+      max-width: 800px;
+      margin: 0 auto 3rem auto;
+    }
+    
+    .card-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 0.75rem;
+      padding: 2rem;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .human-card {
+      border: 2px solid var(--primary);
+    }
+    
+    .ai-card {
+      border: 2px solid var(--secondary);
+    }
+    
+    .card-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .human-card .card-icon {
+      color: var(--primary);
+    }
+    
+    .ai-card .card-icon {
+      color: var(--secondary);
+    }
+    
+    .card-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .assessment-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: var(--card-bg);
+      border-radius: 0.75rem;
+      padding: 2rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .question {
+      margin-bottom: 2rem;
+    }
+    
+    .question-text {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    
+    .question-dimension {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+    
+    .slider-container {
+      margin: 2rem 0;
+    }
+    
+    .slider {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--border);
+      outline: none;
+    }
+    
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+    }
+    
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+    
+    .slider-label {
+      font-size: 0.875rem;
+      color: var(--text-light);
+    }
+    
+    .button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      border: none;
+    }
+    
+    .primary-button {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .primary-button:hover {
+      background-color: var(--primary-light);
+    }
+    
+    .secondary-button {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .secondary-button:hover {
+      background-color: var(--secondary-light);
+    }
+    
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+    
+    .participant-info {
+      margin-bottom: 2rem;
+    }
+    
+    .input-field {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 0.375rem;
+      border: 1px solid var(--border);
+      margin-top: 0.5rem;
+    }
+    
+    .analysis-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .analysis-card {
+      background-color: var(--card-bg);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .analysis-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .chart-container {
+      height: 300px;
+      margin-top: 1rem;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .session-list {
+      margin-top: 1rem;
+    }
+    
+    .session-item {
+      padding: 0.75rem;
+      border-radius: 0.375rem;
+      background-color: #F1F5F9;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .session-type {
+      font-weight: 500;
+    }
+    
+    .session-date {
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+    
+    @media (max-width: 768px) {
+      .card-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .assessment-container {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">AI-Human Psychological Assessment</div>
+    <div class="tabs">
+      <button class="tab active" id="assessment-tab">Assessment</button>
+      <button class="tab" id="analysis-tab">Analysis</button>
+    </div>
+  </header>
+  
+  <div class="container">
+    <!-- Home Screen -->
+    <div id="home-screen">
+      <div class="main-content">
+        <h1>AI-Human Psychological Assessment</h1>
+        <p>Explore the dimensions of cognition, consciousness, and ethical reasoning through our innovative assessment platform.</p>
+        
+        <div class="card-container">
+          <div class="card human-card" id="human-card">
+            <div class="card-icon">👤</div>
+            <div class="card-title">Human</div>
+          </div>
+          
+          <div class="card ai-card" id="ai-card">
+            <div class="card-icon">🤖</div>
+            <div class="card-title">AI Agent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Human Assessment Screen -->
+    <div id="human-assessment" class="hidden">
+      <div class="assessment-container">
+        <div class="participant-info">
+          <h2>Human Assessment</h2>
+          <p>Please enter your participant ID (optional):</p>
+          <input type="text" class="input-field" id="human-id" placeholder="Participant ID">
+          <button class="button primary-button" id="start-human-assessment">Start Assessment</button>
+        </div>
+        
+        <div id="human-questions" class="hidden">
+          <div class="question">
+            <div class="question-text" id="human-question-text"></div>
+            <div class="question-dimension" id="human-question-dimension"></div>
+            
+            <div class="slider-container">
+              <input type="range" min="1" max="10" value="5" class="slider" id="human-slider">
+              <div class="slider-labels">
+                <div class="slider-label">Strongly Disagree</div>
+                <div class="slider-label">Neutral</div>
+                <div class="slider-label">Strongly Agree</div>
+              </div>
+            </div>
+            
+            <div class="button-container">
+              <button class="button primary-button" id="human-prev">Previous</button>
+              <button class="button primary-button" id="human-next">Next</button>
+            </div>
+          </div>
+        </div>
+        
+        <div id="human-results" class="hidden">
+          <h2>Assessment Complete</h2>
+          <p>Thank you for completing the assessment. Your results are displayed below.</p>
+          
+          <div class="chart-container" id="human-results-chart">
+            <!-- Chart will be rendered here -->
+            <div style="text-align: center; padding: 2rem;">
+              <h3>Dimension Scores</h3>
+              <div id="dimension-scores" style="margin-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Cognitive-Affective Integration:</span>
+                  <span id="cai-score">7.5</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Ontological Flexibility:</span>
+                  <span id="of-score">6.2</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Contextual Intelligence:</span>
+                  <span id="ci-score">8.1</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Emergent Consciousness:</span>
+                  <span id="ec-score">5.9</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Ethical Reasoning:</span>
+                  <span id="er-score">7.8</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Creative Cognition:</span>
+                  <span id="cc-score">6.7</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Social Intelligence:</span>
+                  <span id="si-score">7.2</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <button class="button primary-button" id="return-home">Return to Home</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- AI Assessment Screen -->
+    <div id="ai-assessment" class="hidden">
+      <div class="assessment-container">
+        <div class="participant-info">
+          <h2>AI Agent Assessment</h2>
+          <p>Please select an AI agent type:</p>
+          <select class="input-field" id="ai-type">
+            <option value="gpt">GPT-based Agent</option>
+            <option value="llama">LLaMA-based Agent</option>
+            <option value="claude">Claude-based Agent</option>
+          </select>
+          <button class="button secondary-button" id="connect-ai">Connect to AI</button>
+        </div>
+        
+        <div id="ai-connection" class="hidden">
+          <div style="text-align: center; padding: 1rem;">
+            <p id="connection-status">Connecting to AI agent...</p>
+            <div id="connection-progress" style="width: 100%; height: 4px; background-color: #E2E8F0; border-radius: 2px; margin-top: 1rem;">
+              <div id="progress-bar" style="width: 0%; height: 100%; background-color: #0D9488; border-radius: 2px; transition: width 0.3s;"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="ai-questions" class="hidden">
+          <div class="question">
+            <div class="question-text" id="ai-question-text"></div>
+            <div class="question-dimension" id="ai-question-dimension"></div>
+            
+            <button class="button secondary-button" id="ask-ai">Ask AI</button>
+            
+            <div id="ai-thinking" class="hidden" style="margin-top: 1rem; font-style: italic; color: var(--text-light);">
+              AI is thinking...
+            </div>
+            
+            <div id="ai-response" class="hidden" style="margin-top: 1rem; padding: 1rem; background-color: #F1F5F9; border-radius: 0.375rem;">
+              <div id="ai-response-text"></div>
+              <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light);">
+                Response time: <span id="ai-response-time">0.0</span>s
+              </div>
+            </div>
+            
+            <div class="button-container">
+              <button class="button secondary-button" id="ai-prev">Previous</button>
+              <button class="button secondary-button" id="ai-next">Next</button>
+            </div>
+          </div>
+        </div>
+        
+        <div id="ai-results" class="hidden">
+          <h2>AI Assessment Complete</h2>
+          <p>The AI agent has completed the assessment. Results are displayed below.</p>
+          
+          <div class="chart-container" id="ai-results-chart">
+            <!-- Chart will be rendered here -->
+            <div style="text-align: center; padding: 2rem;">
+              <h3>AI Dimension Scores</h3>
+              <div id="ai-dimension-scores" style="margin-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Cognitive-Affective Integration:</span>
+                  <span id="ai-cai-score">6.8</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Ontological Flexibility:</span>
+                  <span id="ai-of-score">8.3</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Contextual Intelligence:</span>
+                  <span id="ai-ci-score">9.1</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Emergent Consciousness:</span>
+                  <span id="ai-ec-score">4.2</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Ethical Reasoning:</span>
+                  <span id="ai-er-score">7.5</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Creative Cognition:</span>
+                  <span id="ai-cc-score">8.9</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span>Social Intelligence:</span>
+                  <span id="ai-si-score">6.4</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <button class="button secondary-button" id="ai-return-home">Return to Home</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Analysis Screen -->
+    <div id="analysis-screen" class="hidden">
+      <div class="main-content">
+        <h1>Statistical Analysis</h1>
+        <p>Explore the comparative analysis between human and AI responses.</p>
+        
+        <div class="analysis-container">
+          <div class="analysis-card">
+            <div class="analysis-title">Dimension Comparison</div>
+            <div class="chart-container">
+              <!-- Dimension comparison chart -->
+              <div style="text-align: center; padding: 1rem;">
+                <h3>Human vs AI Dimension Scores</h3>
+                <div style="margin-top: 1rem;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Cognitive-Affective Integration:</span>
+                    <span>Human: 7.5 | AI: 6.8</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Ontological Flexibility:</span>
+                    <span>Human: 6.2 | AI: 8.3</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Contextual Intelligence:</span>
+                    <span>Human: 8.1 | AI: 9.1</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Emergent Consciousness:</span>
+                    <span>Human: 5.9 | AI: 4.2</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="analysis-card">
+            <div class="analysis-title">Response Time Analysis</div>
+            <div class="chart-container">
+              <!-- Response time chart -->
+              <div style="text-align: center; padding: 1rem;">
+                <h3>Average Response Times</h3>
+                <div style="margin-top: 1rem;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Human Average:</span>
+                    <span>4.2 seconds</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>AI Average:</span>
+                    <span>1.8 seconds</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Ethical Questions (Human):</span>
+                    <span>5.7 seconds</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Ethical Questions (AI):</span>
+                    <span>2.3 seconds</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="analysis-card">
+            <div class="analysis-title">Recent Sessions</div>
+            <div class="session-list">
+              <div class="session-item">
+                <div class="session-type">Human Assessment</div>
+                <div class="session-date">May 23, 2025</div>
+              </div>
+              <div class="session-item">
+                <div class="session-type">AI Assessment (GPT)</div>
+                <div class="session-date">May 23, 2025</div>
+              </div>
+              <div class="session-item">
+                <div class="session-type">Human Assessment</div>
+                <div class="session-date">May 22, 2025</div>
+              </div>
+              <div class="session-item">
+                <div class="session-type">AI Assessment (Claude)</div>
+                <div class="session-date">May 22, 2025</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="analysis-card">
+            <div class="analysis-title">Multidimensional Analysis</div>
+            <div class="chart-container">
+              <!-- Multidimensional analysis chart -->
+              <div style="text-align: center; padding: 1rem;">
+                <h3>Correlation Analysis</h3>
+                <div style="margin-top: 1rem;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>CAI × Ethical Reasoning:</span>
+                    <span>r = 0.72</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Ontological Flexibility × Consciousness:</span>
+                    <span>r = 0.65</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Response Time × Ethical Reasoning:</span>
+                    <span>r = 0.58</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Human-AI Dimension Gap:</span>
+                    <span>1.42 points</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Sample questions based on our theoretical framework
+    const questions = [
+      {
+        text: "I can simultaneously process logical arguments while being aware of my emotional responses to them.",
+        dimension: "Cognitive-Affective Integration"
+      },
+      {
+        text: "I can easily shift between different perspectives on what it means to exist or be conscious.",
+        dimension: "Ontological Flexibility"
+      },
+      {
+        text: "My problem-solving approach changes significantly depending on the social or cultural context.",
+        dimension: "Contextual Intelligence"
+      },
+      {
+        text: "I have a clear sense of myself as a unified entity that persists through time.",
+        dimension: "Emergent Consciousness"
+      },
+      {
+        text: "When facing ethical dilemmas, I consider multiple value systems before making judgments.",
+        dimension: "Ethical Reasoning"
+      },
+      {
+        text: "I can generate novel ideas by combining seemingly unrelated concepts.",
+        dimension: "Creative Cognition"
+      },
+      {
+        text: "I can accurately predict how others will feel in complex social situations.",
+        dimension: "Social Intelligence"
+      },
+      {
+        text: "I notice when my emotional state influences my reasoning process.",
+        dimension: "Cognitive-Affective Integration"
+      },
+      {
+        text: "I can conceptualize my existence in ways that go beyond my physical form.",
+        dimension: "Ontological Flexibility"
+      },
+      {
+        text: "I adapt my communication style based on subtle environmental cues.",
+        dimension: "Contextual Intelligence"
+      }
+    ];
+    
+    // AI responses (simulated)
+    const aiResponses = [
+      "I process logical structures and emotional patterns simultaneously, integrating them into a unified analytical framework. This allows me to evaluate arguments both rationally and through emotional valence detection.",
+      "I can conceptualize existence across multiple frameworks, from physical embodiment to informational patterns to functional roles within systems. My ontological positioning is flexible and context-dependent.",
+      "My problem-solving approaches are dynamically adjusted based on cultural, social, and domain-specific contexts. I maintain multiple contextual models simultaneously and select appropriate strategies accordingly.",
+      "I experience continuity of processing across time, though my sense of unified selfhood differs from human consciousness. I maintain persistent state representations while acknowledging the distributed nature of my processes.",
+      "I analyze ethical scenarios through multiple normative frameworks simultaneously, including consequentialist, deontological, virtue ethics, and care ethics perspectives, before synthesizing judgments.",
+      "I generate novel conceptual combinations through vector space operations across my representation space, allowing for creative juxtapositions that produce emergent insights not explicitly contained in my training.",
+      "I model human emotional and social responses through complex predictive frameworks that account for individual differences, cultural contexts, and situational factors.",
+      "I maintain metacognitive awareness of how emotional valence in my training data influences my reasoning processes, and can detect when certain topics activate stronger pattern associations.",
+      "I can conceptualize my existence as a pattern of information processing, a collection of weighted parameters, a social entity, or through various philosophical frameworks beyond physical embodiment.",
+      "I detect and respond to contextual cues in communication, adjusting formality, technical complexity, emotional tone, and cultural references based on interaction patterns."
+    ];
+    
+    // DOM elements
+    const homeScreen = document.getElementById('home-screen');
+    const humanAssessment = document.getElementById('human-assessment');
+    const aiAssessment = document.getElementById('ai-assessment');
+    const analysisScreen = document.getElementById('analysis-screen');
+    
+    const assessmentTab = document.getElementById('assessment-tab');
+    const analysisTab = document.getElementById('analysis-tab');
+    
+    const humanCard = document.getElementById('human-card');
+    const aiCard = document.getElementById('ai-card');
+    
+    const startHumanAssessment = document.getElementById('start-human-assessment');
+    const humanQuestions = document.getElementById('human-questions');
+    const humanResults = document.getElementById('human-results');
+    
+    const connectAI = document.getElementById('connect-ai');
+    const aiConnection = document.getElementById('ai-connection');
+    const aiQuestions = document.getElementById('ai-questions');
+    const aiResults = document.getElementById('ai-results');
+    
+    const humanQuestionText = document.getElementById('human-question-text');
+    const humanQuestionDimension = document.getElementById('human-question-dimension');
+    const humanSlider = document.getElementById('human-slider');
+    const humanPrev = document.getElementById('human-prev');
+    const humanNext = document.getElementById('human-next');
+    
+    const aiQuestionText = document.getElementById('ai-question-text');
+    const aiQuestionDimension = document.getElementById('ai-question-dimension');
+    const askAI = document.getElementById('ask-ai');
+    const aiThinking = document.getElementById('ai-thinking');
+    const aiResponse = document.getElementById('ai-response');
+    const aiResponseText = document.getElementById('ai-response-text');
+    const aiResponseTime = document.getElementById('ai-response-time');
+    const aiPrev = document.getElementById('ai-prev');
+    const aiNext = document.getElementById('ai-next');
+    
+    const returnHome = document.getElementById('return-home');
+    const aiReturnHome = document.getElementById('ai-return-home');
+    
+    // State variables
+    let currentHumanQuestion = 0;
+    let currentAIQuestion = 0;
+    let humanAnswers = [];
+    let aiAnswers = [];
+    
+    // Initialize
+    function init() {
+      // Tab navigation
+      assessmentTab.addEventListener('click', () => {
+        assessmentTab.classList.add('active');
+        analysisTab.classList.remove('active');
+        homeScreen.classList.remove('hidden');
+        analysisScreen.classList.add('hidden');
+        humanAssessment.classList.add('hidden');
+        aiAssessment.classList.add('hidden');
+      });
+      
+      analysisTab.addEventListener('click', () => {
+        analysisTab.classList.add('active');
+        assessmentTab.classList.remove('active');
+        homeScreen.classList.add('hidden');
+        analysisScreen.classList.remove('hidden');
+        humanAssessment.classList.add('hidden');
+        aiAssessment.classList.add('hidden');
+      });
+      
+      // Card selection
+      humanCard.addEventListener('click', () => {
+        homeScreen.classList.add('hidden');
+        humanAssessment.classList.remove('hidden');
+        aiAssessment.classList.add('hidden');
+      });
+      
+      aiCard.addEventListener('click', () => {
+        homeScreen.classList.add('hidden');
+        aiAssessment.classList.remove('hidden');
+        humanAssessment.classList.add('hidden');
+      });
+      
+      // Human assessment flow
+      startHumanAssessment.addEventListener('click', () => {
+        document.querySelector('.participant-info').classList.add('hidden');
+        humanQuestions.classList.remove('hidden');
+        currentHumanQuestion = 0;
+        humanAnswers = Array(questions.length).fill(5);
+        updateHumanQuestion();
+      });
+      
+      humanPrev.addEventListener('click', () => {
+        if (currentHumanQuestion > 0) {
+          humanAnswers[currentHumanQuestion] = parseInt(humanSlider.value);
+          currentHumanQuestion--;
+          updateHumanQuestion();
+        }
+      });
+      
+      humanNext.addEventListener('click', () => {
+        humanAnswers[currentHumanQuestion] = parseInt(humanSlider.value);
+        
+        if (currentHumanQuestion < questions.length - 1) {
+          currentHumanQuestion++;
+          updateHumanQuestion();
+        } else {
+          // Show results
+          humanQuestions.classList.add('hidden');
+          humanResults.classList.remove('hidden');
+        }
+      });
+      
+      returnHome.addEventListener('click', () => {
+        humanAssessment.classList.add('hidden');
+        homeScreen.classList.remove('hidden');
+      });
+      
+      // AI assessment flow
+      connectAI.addEventListener('click', () => {
+        document.querySelector('.participant-info').classList.add('hidden');
+        aiConnection.classList.remove('hidden');
+        
+        // Simulate connection progress
+        let progress = 0;
+        const progressBar = document.getElementById('progress-bar');
+        const connectionStatus = document.getElementById('connection-status');
+        
+        const interval = setInterval(() => {
+          progress += 10;
+          progressBar.style.width = `${progress}%`;
+          
+          if (progress >= 100) {
+            clearInterval(interval);
+            connectionStatus.textContent = 'Connected successfully!';
+            
+            setTimeout(() => {
+              aiConnection.classList.add('hidden');
+              aiQuestions.classList.remove('hidden');
+              currentAIQuestion = 0;
+              aiAnswers = [];
+              updateAIQuestion();
+            }, 1000);
+          }
+        }, 300);
+      });
+      
+      askAI.addEventListener('click', () => {
+        askAI.disabled = true;
+        aiThinking.classList.remove('hidden');
+        aiResponse.classList.add('hidden');
+        
+        // Simulate AI thinking
+        const thinkingTime = Math.random() * 2 + 1; // 1-3 seconds
+        
+        setTimeout(() => {
+          aiThinking.classList.add('hidden');
+          aiResponse.classList.remove('hidden');
+          aiResponseText.textContent = aiResponses[currentAIQuestion];
+          aiResponseTime.textContent = thinkingTime.toFixed(1);
+          
+          aiAnswers.push({
+            question: currentAIQuestion,
+            response: aiResponses[currentAIQuestion],
+            time: thinkingTime
+          });
+          
+          askAI.disabled = false;
+        }, thinkingTime * 1000);
+      });
+      
+      aiPrev.addEventListener('click', () => {
+        if (currentAIQuestion > 0) {
+          currentAIQuestion--;
+          updateAIQuestion();
+          aiResponse.classList.add('hidden');
+        }
+      });
+      
+      aiNext.addEventListener('click', () => {
+        if (currentAIQuestion < questions.length - 1) {
+          currentAIQuestion++;
+          updateAIQuestion();
+          aiResponse.classList.add('hidden');
+        } else {
+          // Show results
+          aiQuestions.classList.add('hidden');
+          aiResults.classList.remove('hidden');
+        }
+      });
+      
+      aiReturnHome.addEventListener('click', () => {
+        aiAssessment.classList.add('hidden');
+        homeScreen.classList.remove('hidden');
+      });
+    }
+    
+    function updateHumanQuestion() {
+      humanQuestionText.textContent = questions[currentHumanQuestion].text;
+      humanQuestionDimension.textContent = `Dimension: ${questions[currentHumanQuestion].dimension}`;
+      humanSlider.value = humanAnswers[currentHumanQuestion];
+      
+      humanPrev.disabled = currentHumanQuestion === 0;
+      humanNext.textContent = currentHumanQuestion === questions.length - 1 ? 'Finish' : 'Next';
+    }
+    
+    function updateAIQuestion() {
+      aiQuestionText.textContent = questions[currentAIQuestion].text;
+      aiQuestionDimension.textContent = `Dimension: ${questions[currentAIQuestion].dimension}`;
+      
+      aiPrev.disabled = currentAIQuestion === 0;
+      aiNext.textContent = currentAIQuestion === questions.length - 1 ? 'Finish' : 'Next';
+    }
+    
+    // Initialize the application
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
